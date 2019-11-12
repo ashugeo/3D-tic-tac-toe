@@ -24,12 +24,11 @@ function startGame() {
 
         while (marbles[cell]) cell += 9;
 
-        $('.marble').eq(cell).addClass('black');
-        marbles[cell] = 'black';
+        $('.marble').eq(cell).addClass(currentPlayer);
+        marbles[cell] = currentPlayer;
     }
 
     for (let i = 0; i < 9; i += 1) {
-
         for (let j = 0; j < 3; j += 1) {
             // Avoid starting from last empty marble spot and going up
             if (!marbles[(j * 9 + i)]) continue;
@@ -69,9 +68,9 @@ function startGame() {
 /**
  * Find lines
  * @param  {Boolean} condition First condition to check
- * @param  {Number} shift      Shift to add to first marble
- * @param  {Number} [i]        Marble index
- * @param  {Number} [j=0]      Layer (horizontal plane) index
+ * @param  {Number}  shift     Shift to add to first marble
+ * @param  {Number}  [i]       Marble index
+ * @param  {Number}  [j=0]     Layer (horizontal plane) index
  */
 function findLines(condition, shift, i, j = 0) {
     if (
