@@ -1,6 +1,6 @@
 $(document).ready(() => {
     $('.marble').each((id, el) => {
-        $(el).append(id);
+        // $(el).append(id);
     });
 
     startGame();
@@ -62,7 +62,22 @@ function startGame() {
         findLines(i > 5, 6, i);
     }
 
-    console.log(lines);
+    setTimeout(() => {
+        $('.board').addClass('transparent');
+    }, 1000);
+
+    let i = 0;
+    for (const player of Object.keys(lines)) {
+        for (const line of lines[player]) {
+            setTimeout(() => {
+                $('.marble.visible').removeClass('visible');
+                line.forEach(id => {
+                    $('.marble').eq(id).addClass('visible');
+                });
+            }, i * 1000);
+            i += 1;
+        }
+    }
 }
 
 /**

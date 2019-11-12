@@ -31,6 +31,12 @@ h1 {
     transform: rotateX(20deg) rotateZ(-45deg) translate(-150px, 150px);
     border-radius: 16px;
 
+    &.transparent {
+        .marble {
+            opacity: .2;
+        }
+    }
+
     // TODO: See zdog for isometric view: https://zzz.dog/
 
     [class^="plane-"] {
@@ -69,8 +75,12 @@ h1 {
         height: 64px;
         border-radius: 50%;
         pointer-events: all;
-        border: 1px solid white;
-        opacity: .1;
+        border: 1px solid rgba(255, 255, 255, .1);
+        transition: opacity .3s ease;
+
+        &.visible {
+            opacity: 1;
+        }
 
         &:hover {
             // background-color: rgba(255,255,255,.5);
@@ -80,7 +90,6 @@ h1 {
         &.red {
             box-shadow: inset 4px -8px 4px rgba(0,0,0,0.2);
             border: none;
-            opacity: 1;
         }
 
         &.black {
