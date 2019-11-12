@@ -34,7 +34,7 @@ function startGame() {
             if (!marbles[(j * 9 + i)]) continue;
 
             // X (horizontal, downwards)
-            findLines((j * 9 + i) % 3 === 0, 2, i, j);
+            findLines((j * 9 + i) % 3 === 0, 1, i, j);
 
             // Y (horizontal, sidewards)
             findLines(i < 3, 3, i, j);
