@@ -1,0 +1,88 @@
+// This comment enables SCSS compilation
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+    background-color: #101216;
+    color: #ddd;
+}
+
+.wrap {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 32px 0;
+}
+
+h1 {
+    text-align: center;
+}
+
+.ttt {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    margin: 0 auto;
+    background-color: lighten(#101216, 2);
+    transform: rotateX(20deg) rotateZ(-45deg) translate(-150px, 150px);
+    border-radius: 16px;
+
+    [class^="plane-"] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        pointer-events: none;
+
+        &:nth-child(2) {
+            transform: translate(40px, -40px);
+        }
+
+        &:nth-child(3) {
+            transform: translate(80px, -80px);
+        }
+
+        [class^="row-"] {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            pointer-events: none;
+
+            [class^="cell-"] {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                pointer-events: none;
+            }
+        }
+    }
+
+    .marble {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        box-shadow: inset 4px -8px 4px rgba(0,0,0,0.2);
+        pointer-events: all;
+
+        &.black {
+            background-color: #282828;
+
+            &:hover {
+                background-color: lighten(#282828, 7);
+            }
+        }
+
+        &.red {
+            background-color: #a55040;
+
+            &:hover {
+                background-color: lighten(#a55040, 10);
+            }
+        }
+    }
+}
