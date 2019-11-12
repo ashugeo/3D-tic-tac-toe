@@ -22,7 +22,7 @@ h1 {
     text-align: center;
 }
 
-.ttt {
+.board {
     position: relative;
     width: 400px;
     height: 400px;
@@ -30,6 +30,8 @@ h1 {
     background-color: lighten(#101216, 2);
     transform: rotateX(20deg) rotateZ(-45deg) translate(-150px, 150px);
     border-radius: 16px;
+
+    // TODO: See zdog for isometric view: https://zzz.dog/
 
     [class^="plane-"] {
         position: absolute;
@@ -66,14 +68,26 @@ h1 {
         width: 64px;
         height: 64px;
         border-radius: 50%;
-        box-shadow: inset 4px -8px 4px rgba(0,0,0,0.2);
         pointer-events: all;
+        border: 1px solid white;
+        opacity: .1;
+
+        &:hover {
+            // background-color: rgba(255,255,255,.5);
+        }
+
+        &.black,
+        &.red {
+            box-shadow: inset 4px -8px 4px rgba(0,0,0,0.2);
+            border: none;
+            opacity: 1;
+        }
 
         &.black {
-            background-color: #282828;
+            background-color: #363636;
 
             &:hover {
-                background-color: lighten(#282828, 7);
+                background-color: lighten(#363636, 7);
             }
         }
 
@@ -84,5 +98,24 @@ h1 {
                 background-color: lighten(#a55040, 10);
             }
         }
+    }
+}
+
+button {
+    background-color: #222222;
+    border: 0;
+    padding: 16px 24px;
+    border-radius: 4px;
+    color: #ddd;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:focus,
+    &:hover {
+        outline: none;
+        background-color: #262626;
     }
 }
