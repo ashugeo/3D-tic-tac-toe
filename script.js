@@ -6,14 +6,14 @@ $(document).ready(() => {
     startGame();
 });
 
-function startGame() {
-    const marblesPerPlayer = 13;
-    const marbles = [];
-    const lines = {
-        red: [],
-        black: []
-    }
+const marblesPerPlayer = 13;
+const marbles = [];
+const lines = {
+    red: [],
+    black: []
+}
 
+function startGame() {
     for (let i = 0; i < marblesPerPlayer * 2; i += 1) {
         const currentPlayer = Object.keys(lines)[i % 2];
 
@@ -24,58 +24,61 @@ function startGame() {
 
         while (marbles[cell]) cell += 9;
 
-        $('.marble').eq(cell).addClass(currentPlayer);
-        marbles[cell] = currentPlayer;
+        $('.marble').eq(cell).addClass('black');
+        marbles[cell] = 'black';
     }
 
     for (let i = 0; i < 9; i += 1) {
+
         for (let j = 0; j < 3; j += 1) {
+            // Avoid starting from last empty marble spot and going up
             if (!marbles[(j * 9 + i)]) continue;
 
             // X (horizontal, downwards)
-            if ((j * 9 + i) % 3 === 0 && marbles[(j * 9 + i)] === marbles[(j * 9 + i) + 1] && marbles[(j * 9 + i)] === marbles[(j * 9 + i) + 2]) {
-                lines[marbles[(j * 9 + i)]].push([(j * 9 + i), (j * 9 + i) + 1, (j * 9 + i) + 2]);
-            }
+            findLines((j * 9 + i) % 3 === 0, 2, i, j);
 
             // Y (horizontal, sidewards)
-            if (i < 3 && marbles[(j * 9 + i)] === marbles[(j * 9 + i) + 3] && marbles[(j * 9 + i)] === marbles[(j * 9 + i) + 2 * 3]) {
-                lines[marbles[(j * 9 + i)]].push([(j * 9 + i), (j * 9 + i) + 3, (j * 9 + i) + 2 * 3]);
-            }
+            findLines(i < 3, 3, i, j);
 
             // X/Y (horizontal diagonal, downwards)
-            if (i === 0 && marbles[(j * 9 + i)] === marbles[(j * 9 + i) + 4] && marbles[(j * 9 + i)] === marbles[(j * 9 + i) + 2 * 4]) {
-                lines[marbles[(j * 9 + i)]].push([(j * 9 + i), (j * 9 + i) + 4, (j * 9 + i) + 2 * 4]);
-            }
+            findLines(i === 0, 4, i, j);
 
             // X/Y (horizontal diagonal, downwards)
-            if (i === 2 && marbles[(j * 9 + i)] === marbles[(j * 9 + i) + 2] && marbles[(j * 9 + i)] === marbles[(j * 9 + i) + 2 * 2]) {
-                lines[marbles[(j * 9 + i)]].push([(j * 9 + i), (j * 9 + i) + 2, (j * 9 + i) + 2 * 2]);
-            }
+            findLines(i === 2, 2, i, j);
         }
 
         // Z (vertical)
-        if (marbles[i] === marbles[i + 9] && marbles[i] === marbles[i + 2 * 9]) lines[marbles[i]].push([i, i + 9, i + 2 * 9]);
+        findLines(true, 9, i);
 
         // X/Z (diagonal, downwards)
-        if (i % 3 === 0 && marbles[i] === marbles[i + 10] && marbles[i] === marbles[i + 2 * 10]) {
-            lines[marbles[i]].push([i, i + 10, i + 2 * 10]);
-        }
+        findLines(i % 3 === 0, 10, i);
 
         // X/Z (diagonal, upwards)
-        if (i % 3 === 2 && marbles[i] === marbles[i + 8] && marbles[i] === marbles[i + 2 * 8]) {
-            lines[marbles[i]].push([i, i + 8, i + 2 * 8]);
-        }
+        findLines(i % 3 === 2, 8, i);
 
         // Y/Z (diagonal, to right)
-        if (i < 3 && marbles[i] === marbles[i + 12] && marbles[i] === marbles[i + 2 * 12]) {
-            lines[marbles[i]].push([i, i + 12, i + 2 * 12]);
-        }
+        findLines(i < 3, 12, i);
 
         // Y/Z (diagonal, to left)
-        if (i > 5 && marbles[i] === marbles[i + 6] && marbles[i] === marbles[i + 2 * 6]) {
-            lines[marbles[i]].push([i, i + 6, i + 2 * 6]);
-        }
+        findLines(i > 5, 6, i);
     }
-    
+
     console.log(lines);
+}
+
+/**
+ * Find lines
+ * @param  {Boolean} condition First condition to check
+ * @param  {Number} shift      Shift to add to first marble
+ * @param  {Number} [i]        Marble index
+ * @param  {Number} [j=0]      Layer (horizontal plane) index
+ */
+function findLines(condition, shift, i, j = 0) {
+    if (
+        condition && // check first condition
+        marbles[(j * 9 + i)] === marbles[(j * 9 + i) + shift] && // check middle marble
+        marbles[(j * 9 + i)] === marbles[(j * 9 + i) + shift * 2] // check last marble
+    ) {
+        lines[marbles[(j * 9 + i)]].push([(j * 9 + i), (j * 9 + i) + shift, (j * 9 + i) + 2 * shift]);
+    }
 }
