@@ -16,7 +16,13 @@ const lines = {
     black: []
 }
 
-const colors = ['#EA0', '#C25'];
+const width = 800;
+const height = 800;
+
+const colors = ['#ea0', '#c25'];
+
+const diameter = 100;
+const margin = diameter * 2;
 
 function createIllo() {
     // create illo
@@ -30,22 +36,21 @@ function createIllo() {
         }
     });
 
-    const margin = 100;
-    const diameter = 50;
-
     let i = 0;
-    for (let y = -diameter; y < 2 * diameter; y += diameter) {
+    for (let y = -2 * diameter; y <= 0; y += diameter) {
         for (let z = -margin; z < 2 * margin; z += margin) {
             for (let x = -margin; x < 2 * margin; x += margin) {
-                i += 1;
-
-                // add circle
-                new Zdog.Shape({
+                const rand = Math.floor(Math.random() * 2);
+                const shape = new Zdog.Shape({
                     addTo: illo,
                     stroke: diameter,
-                    color: colors[Math.floor(Math.random() * 2)],
+                    color: colors[rand],
                     translate: { x, y, z }
                 });
+                shape.index = i;
+                marbles.push(shape);
+
+                i += 1;
             }
         }
     }
@@ -58,13 +63,28 @@ function createIllo() {
 }
 
 function animate() {
-    // rotate illo each frame
-    // illo.rotate.y += 0.03;
+    illo.rotate.y += 0.002;
     illo.updateRenderGraph();
 
     // animate next frame
     requestAnimationFrame(animate);
 }
+
+$(document).on('mousemove', 'canvas', e => {
+    const canvas = e.target;
+    const rect = canvas.getBoundingClientRect();
+
+    const coords = {
+        x: (e.clientX - rect.left) / (rect.right - rect.left) * canvas.width,
+        y: (e.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height
+    };
+
+    const marblesHovered = marbles.filter(marble => Math.abs(coords.x - (marble.renderFront.x + width / 2)) < diameter / 2 && Math.abs(coords.y - (marble.renderFront.y + height / 2)) < diameter / 2);
+    if (marblesHovered.length) {
+        const frontMarble = marblesHovered.reduce((frontMarble, marble) => frontMarble.renderFront.z > marble.renderFront.z ? frontMarble : marble);
+        console.log(frontMarble.index);
+    }
+})
 
 function startGame() {
     for (let i = 0; i < marblesPerPlayer * 2; i += 1) {
