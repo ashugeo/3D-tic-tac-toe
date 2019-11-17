@@ -22,6 +22,12 @@ h1 {
     text-align: center;
 }
 
+canvas {
+    display: block;
+    margin: 0 auto;
+    // cursor: move;
+}
+
 .board {
     position: relative;
     width: 400px;

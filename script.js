@@ -3,14 +3,67 @@ $(document).ready(() => {
         // $(el).append(id);
     });
 
-    startGame();
+    createIllo();
+    // startGame();
 });
+
+let illo;
 
 const marblesPerPlayer = 13;
 const marbles = [];
 const lines = {
     red: [],
     black: []
+}
+
+const colors = ['#EA0', '#C25'];
+
+function createIllo() {
+    // create illo
+    illo = new Zdog.Illustration({
+        // set canvas with selector
+        element: '.zdog-canvas',
+        dragRotate: false,
+        rotate: {
+            x: -1,
+            y: 0.6
+        }
+    });
+
+    const margin = 100;
+    const diameter = 50;
+
+    let i = 0;
+    for (let y = -diameter; y < 2 * diameter; y += diameter) {
+        for (let z = -margin; z < 2 * margin; z += margin) {
+            for (let x = -margin; x < 2 * margin; x += margin) {
+                i += 1;
+
+                // add circle
+                new Zdog.Shape({
+                    addTo: illo,
+                    stroke: diameter,
+                    color: colors[Math.floor(Math.random() * 2)],
+                    translate: { x, y, z }
+                });
+            }
+        }
+    }
+
+    // update & render
+    illo.updateRenderGraph();
+
+    // start animation
+    animate();
+}
+
+function animate() {
+    // rotate illo each frame
+    // illo.rotate.y += 0.03;
+    illo.updateRenderGraph();
+
+    // animate next frame
+    requestAnimationFrame(animate);
 }
 
 function startGame() {
