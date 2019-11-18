@@ -9,7 +9,6 @@ $(document).ready(() => {
 
 let illo;
 
-const marblesPerPlayer = 13;
 const marbles = [];
 const lines = {
     red: [],
@@ -21,31 +20,40 @@ const height = 800;
 
 const colors = ['#ea0', '#c25'];
 
+let currentPlayer = 0;
+
 const diameter = 100;
 const margin = diameter * 2;
+
+let hoveredMarble;
 
 function createIllo() {
     // create illo
     illo = new Zdog.Illustration({
         // set canvas with selector
         element: '.zdog-canvas',
-        dragRotate: false,
+        // dragRotate: true,
         rotate: {
-            x: -1,
-            y: 0.6
+            x: -0.95,
+            y: 0.95
         }
     });
 
     let i = 0;
-    for (let y = -2 * diameter; y <= 0; y += diameter) {
-        for (let z = -margin; z < 2 * margin; z += margin) {
-            for (let x = -margin; x < 2 * margin; x += margin) {
+    for (let y = 2; y >= 0; y -= 1) {
+        for (let z = -1; z < 2; z += 1) {
+            for (let x = -1; x < 2; x += 1) {
                 const rand = Math.floor(Math.random() * 2);
                 const shape = new Zdog.Shape({
                     addTo: illo,
                     stroke: diameter,
-                    color: colors[rand],
-                    translate: { x, y, z }
+                    color: '#222324',
+                    translate: {
+                        x: x * margin,
+                        y: y * diameter,
+                        z: z * margin
+                    },
+                    visible: y === 2 ? true : false
                 });
                 shape.index = i;
                 marbles.push(shape);
@@ -63,7 +71,7 @@ function createIllo() {
 }
 
 function animate() {
-    illo.rotate.y += 0.002;
+    // illo.rotate.y += 0.002;
     illo.updateRenderGraph();
 
     // animate next frame
@@ -79,12 +87,28 @@ $(document).on('mousemove', 'canvas', e => {
         y: (e.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height
     };
 
-    const marblesHovered = marbles.filter(marble => Math.abs(coords.x - (marble.renderFront.x + width / 2)) < diameter / 2 && Math.abs(coords.y - (marble.renderFront.y + height / 2)) < diameter / 2);
+    const marblesHovered = marbles.filter(marble => marble.visible && Math.abs(coords.x - (marble.renderFront.x + width / 2)) < diameter / 2 && Math.abs(coords.y - (marble.renderFront.y + height / 2)) < diameter / 2);
     if (marblesHovered.length) {
         const frontMarble = marblesHovered.reduce((frontMarble, marble) => frontMarble.renderFront.z > marble.renderFront.z ? frontMarble : marble);
-        console.log(frontMarble.index);
+        hoveredMarble = frontMarble;
+    } else {
+        hoveredMarble = null;
     }
-})
+});
+
+$(document).on('click', 'canvas', () => {
+    if (!hoveredMarble || hoveredMarble.played) return;
+
+    currentPlayer = (currentPlayer + 1) % 2;
+    console.log(hoveredMarble.index);
+    hoveredMarble.played = true;
+    hoveredMarble.color = colors[currentPlayer];
+
+    const marbleAbove = marbles.find(marble => marble.index === hoveredMarble.index + 9);
+    if (marbleAbove) marbleAbove.visible = true;
+
+    console.log(currentPlayer);
+});
 
 function startGame() {
     for (let i = 0; i < marblesPerPlayer * 2; i += 1) {
